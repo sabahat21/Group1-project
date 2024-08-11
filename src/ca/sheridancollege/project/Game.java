@@ -1,58 +1,60 @@
-/**
- * SYST 17796 Project Base code.
- * Students can modify and extend to implement their game.
- * Add your name as an author and the date!
- */
+/*@author Sabahat Faheem, Ekenedilichukwu Nwume, Muhammad Ansari
+ * Group 1-Fundamentals of Software Design and Development SYST 17796
+*/
 package ca.sheridancollege.project;
 
 import java.util.ArrayList;
-
-/**
- * The class that models your game. You should create a more specific child of this class and instantiate the methods
- * given.
- *
- * @author dancye
- * @author Paul Bonenfant Jan 2020
- */
-public abstract class Game {
-
-    private final String name;//the title of the game
-    private ArrayList<Player> players;// the players of the game
-
-    public Game(String name) {
-        this.name = name;
-        players = new ArrayList();
+//Game class serves as the model has players array, dealer object
+//and deck.
+public class Game {
+    private ArrayList<Player> players;
+    private Player dealer;
+    private GroupOfCards deck;
+//constructor to create the game object.
+    public Game() {
+        this.players = new ArrayList<>();
+        this.dealer = new Player("Dealer");
+        this.deck = new GroupOfCards();
+        initializeDeck();
     }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
+//add players to the game.
+    public void addPlayer(Player player) {
+        players.add(player);
     }
-
-    /**
-     * @return the players of this game
-     */
+//specify the card properties, rank and values (numbers).
+    private void initializeDeck() {
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+        int[] values = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};
+//implements that a unique card is assigned to the player
+        for (String suit : suits) {
+            for (int i = 0; i < ranks.length; i++) {
+                deck.addCard(new Card(suit, ranks[i], values[i]));
+            }
+        }
+        //shuffle the group of cards (change the card position).
+        deck.shuffle();
+    }
+//initial state of game to assign 2 cards to each player.
+    public void initialDeal() {
+        for (Player player : players) {
+            player.drawCard(deck);
+            player.drawCard(deck);
+        }
+        dealer.drawCard(deck);
+        dealer.drawCard(deck);
+    }
+//Display all players in array list
     public ArrayList<Player> getPlayers() {
         return players;
     }
-
-    /**
-     * @param players the players of this game
-     */
-    public void setPlayers(ArrayList<Player> players) {
-        this.players = players;
+//return dealer.
+    public Player getDealer() {
+        return dealer;
     }
+//return deck
+    public GroupOfCards getDeck() {
+        return deck;
+    }
+}
 
-    /**
-     * Play the game. This might be one method or many method calls depending on your game.
-     */
-    public abstract void play();
-
-    /**
-     * When the game is over, use this method to declare and display a winning player.
-     */
-    public abstract void declareWinner();
-
-}//end class
