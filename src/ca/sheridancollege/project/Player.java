@@ -1,49 +1,65 @@
 /**
- * SYST 17796 Project Base code.
- * Students can modify and extend to implement their game.
- * Add your name as an author and the date!
+ * @author Sabahat Faheem, Ekenedilichukwu Nwume, Muhammad Ansari
+ * Group 1-Fundamentals of Software Design and Development SYST 17796
  */
 package ca.sheridancollege.project;
 
-/**
- * A class that models each Player in the game. Players have an identifier, which should be unique.
- *
- * @author dancye
- * @author Paul Bonenfant Jan 2020
- */
-public abstract class Player {
-
-    private String name; //the unique name for this player
-
-    /**
-     * A constructor that allows you to set the player's unique ID
-     *
-     * @param name the unique ID to assign to this player.
-     */
+import java.util.ArrayList;
+//Player class to model each player contains name of player, hand and points.
+public class Player {
+    private String name;
+    private ArrayList<Card> hand;
+    private int points;
+//constructor to create the player object.
     public Player(String name) {
         this.name = name;
+        this.hand = new ArrayList<>();
+        this.points = 0;
     }
-
-    /**
-     * @return the player name
-     */
+//return player name.
     public String getName() {
         return name;
     }
-
-    /**
-     * Ensure that the playerID is unique
-     *
-     * @param name the player name to set
-     */
-    public void setName(String name) {
-        this.name = name;
+//return player's hand to assign the group of card to the player
+    public ArrayList<Card> getHand() {
+        return hand;
     }
-
-    /**
-     * The method to be overridden when you subclass the Player class with your specific type of Player and filled in
-     * with logic to play your game.
-     */
-    public abstract void play();
-
+//draw card from deck and adding to the player's hand.
+    public void drawCard(GroupOfCards deck) {
+        Card card = deck.drawCard();
+        if (card != null) {
+            hand.add(card);
+        }
+    }
+//calculate the player's score.
+    public int calculateScore() {
+        int score = 0;
+        int aceCount = 0;
+        for (Card card : hand) {
+            score += card.getValue();
+            if (card.getRank().equals("Ace")) {
+                aceCount++;
+            }
+        }
+        while (score > 21 && aceCount > 0) {
+            score -= 10;
+            aceCount--;
+        }
+        return score;
+    }
+//add points to player based on each turn.
+    public void addPoint() {
+        points++;
+    }
+//return points
+    public int getPoints() {
+        return points;
+    }
+//override toString method.
+    @Override
+    public String toString() {
+        return name + "'s hand: " + hand + " (Score: " + calculateScore() + ")";
+    }
 }
+
+
